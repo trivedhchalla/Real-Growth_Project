@@ -3,13 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <title>GDP Per Capita Chart</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="static/style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="container">
+  <!-- Top Navigation Bar -->
+  <div class="navbar">
     <h1>Top 10 Countries by GDP Per Capita</h1>
+    <nav>
+      <ul>
+        <li><a href="/index">Home</a></li>
+        <li><a href="/gdp">GDP</a></li>
+        <li><a href="/inflation">Inflation</a></li>
+        <li><a href="/housing">Housing</a></li>
+        <li><a href="/food">Food</a></li>
+        <li><a href="/clothing">Clothing</a></li>
+        <li><a href="/salary">Salary</a></li>
+      </ul>
+    </nav>
+  </div>
 
+  <div class="container">
     <form method="POST">
       <label for="year">Year:</label>
       <select id="year" name="year">
@@ -33,9 +47,9 @@
   </div>
 
   <script>
-    const chartData = {{ chart_data | safe }};
     const chartLabels = {{ chart_labels | safe }};
+    const chartData = {{ chart_data | safe }};
   </script>
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script src="static/script.js"></script>
 </body>
 </html>
