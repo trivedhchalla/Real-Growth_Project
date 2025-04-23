@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>GDP Per Capita Chart</title>
+<link rel="stylesheet" href="style/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Top 10 Countries by GDP Per Capita</h1>
+
+    <div class="controls">
+      <label for="year">Year:</label>
+      <select id="year"></select>
+
+      <label for="population">Population:</label>
+      <select id="population">
+        <option value="0">All</option>
+        <option value="100000000">≥ 10 Crore</option>
+        <option value="500000000">≥ 50 Crore</option>
+        <option value="1000000000">≥ 100 Crore</option>
+      </select>
+    </div>
+
+    <canvas id="gdpChart" height="400"></canvas>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
