@@ -1,7 +1,9 @@
 const yearSelect = document.getElementById("year");
 const popSelect = document.getElementById("population");
 const ctx = document.getElementById("gdpChart").getContext("2d");
+const updateButton = document.getElementById("updateChart");
 
+// Populate year dropdown
 const years = Array.from({ length: 2023 - 1960 + 1 }, (_, i) => 1960 + i);
 years.forEach(year => {
   const opt = document.createElement("option");
@@ -13,6 +15,7 @@ years.forEach(year => {
 
 let chart;
 
+// Fetch data and render chart
 async function fetchData() {
   const year = yearSelect.value;
   const minPopulation = popSelect.value;
@@ -37,6 +40,7 @@ async function fetchData() {
     },
     options: {
       indexAxis: 'y',
+      responsive: true,
       scales: {
         x: {
           beginAtZero: true
@@ -46,7 +50,8 @@ async function fetchData() {
   });
 }
 
-yearSelect.addEventListener("change", fetchData);
-popSelect.addEventListener("change", fetchData);
+// Run only when button is clicked
+updateButton.addEventListener("click", fetchData);
 
+// Optionally fetch default chart on page load
 window.onload = fetchData;
