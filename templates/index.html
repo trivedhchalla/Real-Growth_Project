@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Real Growth | Explore Global Progress</title>
-  <link rel="stylesheet" href="style/style_home.css">
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
   <div class="container">
@@ -11,19 +12,310 @@
       <h1>Welcome to Real Growth</h1>
       <p>Explore and compare the growth of nations on vital factors like economy, living standards, and affordability.</p>
     </header>
-
+    
     <nav class="nav-links">
-      <a href="gdp.html">📈 GDP & Population</a>
-      <a href="salary.html">💼 Average Salary</a>
-      <a href="inflation.html">💸 Inflation</a>
-      <a href="clothing.html">👕 Clothing</a>
-      <a href="food.html">🍛 Food</a>
-      <a href="housing.html">🏠 Housing</a>
+      <a href="#home" onclick="showSection('home')">🏠 Home</a>
+      <a href="#gdp" onclick="showSection('gdp')">📈 GDP & Population</a>
+      <a href="#salary" onclick="showSection('salary')">💼 Average Salary</a>
+      <a href="#inflation" onclick="showSection('inflation')">💸 Inflation</a>
+      <a href="#clothing" onclick="showSection('clothing')">👕 Clothing</a>
+      <a href="#food" onclick="showSection('food')">🍛 Food</a>
+      <a href="#housing" onclick="showSection('housing')">🏠 Housing</a>
     </nav>
-
+    
+    <!-- Home Section -->
+    <section id="home" class="active">
+      <h2>Global Economic Indicators at Your Fingertips</h2>
+      <p>Real Growth provides comprehensive data on economic indicators and living standards across the globe. Click on any category above to explore detailed information.</p>
+      
+      <div class="feature-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📈</div>
+          <h3>Economic Growth</h3>
+          <p>Compare GDP growth rates and population trends between countries.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💰</div>
+          <h3>Income Analysis</h3>
+          <p>Explore average salaries and purchasing power across different regions.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🛒</div>
+          <h3>Cost of Living</h3>
+          <p>Understand how inflation and prices of essential goods vary worldwide.</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- GDP Section -->
+    <section id="gdp">
+      <h2>Top 10 Countries by GDP Per Capita</h2>
+      <div class="chart-section">
+        <form id="gdpForm" method="POST" action="/gdp">
+          <label for="year">Year:</label>
+          <select id="year" name="year">
+            {% for y in years %}
+              <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+          </select>
+          
+          <label for="population">Population:</label>
+          <select id="population" name="population">
+            <option value="0" {% if selected_pop == 0 %}selected{% endif %}>All</option>
+            <option value="100000000" {% if selected_pop == 100000000 %}selected{% endif %}>≥ 10 Crore</option>
+            <option value="500000000" {% if selected_pop == 500000000 %}selected{% endif %}>≥ 50 Crore</option>
+            <option value="1000000000" {% if selected_pop == 1000000000 %}selected{% endif %}>≥ 100 Crore</option>
+          </select>
+          
+          <button type="submit">Submit</button>
+        </form>
+        
+        <canvas id="gdpChart" height="400"></canvas>
+      </div>
+      
+      <div class="content-container">
+        <div class="content-card">
+          <h3>GDP Growth Rates</h3>
+          <p>Compare annual GDP growth rates across different regions and economies. See which countries are experiencing rapid economic expansion and which are facing challenges.</p>
+        </div>
+        <div class="content-card">
+          <h3>Population Dynamics</h3>
+          <p>Explore how population growth correlates with economic development. Analyze demographic trends and their impact on national economies.</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Salary Section -->
+    <section id="salary">
+      <h2>Average Salary Comparisons</h2>
+      <div class="chart-section">
+        <form id="salaryForm" method="POST" action="/salary">
+          <label for="salary_year">Year:</label>
+          <select id="salary_year" name="year">
+            {% for y in years %}
+              <option value="{{ y }}" {% if y == selected_year %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+          </select>
+          
+          <label for="region">Region:</label>
+          <select id="region" name="region">
+            <option value="all">All Regions</option>
+            <option value="asia">Asia</option>
+            <option value="europe">Europe</option>
+            <option value="americas">Americas</option>
+            <option value="africa">Africa</option>
+            <option value="oceania">Oceania</option>
+          </select>
+          
+          <button type="submit">Submit</button>
+        </form>
+        
+        <canvas id="salaryChart" height="400"></canvas>
+      </div>
+      
+      <div class="content-container">
+        <div class="content-card">
+          <h3>Global Salary Trends</h3>
+          <p>Explore average salary data across different countries, industries, and job sectors. Understand income disparities and opportunities worldwide.</p>
+        </div>
+        <div class="content-card">
+          <h3>Purchasing Power</h3>
+          <p>Compare what salaries can actually buy in different countries after accounting for local costs of living and taxation.</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Inflation Section -->
+    <section id="inflation">
+      <h2>Inflation Analysis</h2>
+      <div class="chart-section">
+        <form id="inflationForm" method="POST" action="/inflation">
+          <label for="inflation_start_year">Start Year:</label>
+          <select id="inflation_start_year" name="start_year">
+            {% for y in years %}
+              <option value="{{ y }}">{{ y }}</option>
+            {% endfor %}
+          </select>
+          
+          <label for="inflation_end_year">End Year:</label>
+          <select id="inflation_end_year" name="end_year">
+            {% for y in years %}
+              <option value="{{ y }}">{{ y }}</option>
+            {% endfor %}
+          </select>
+          
+          <label for="countries">Countries:</label>
+          <select id="countries" name="countries" multiple>
+            {% for country in countries %}
+              <option value="{{ country }}">{{ country }}</option>
+            {% endfor %}
+          </select>
+          
+          <button type="submit">Submit</button>
+        </form>
+        
+        <canvas id="inflationChart" height="400"></canvas>
+      </div>
+      
+      <div class="content-container">
+        <div class="content-card">
+          <h3>Inflation Rates</h3>
+          <p>Track inflation trends across different economies and time periods. Understand how price increases affect purchasing power and living standards.</p>
+        </div>
+        <div class="content-card">
+          <h3>Economic Stability</h3>
+          <p>Analyze how countries manage inflation and the relationship between inflation, interest rates, and economic growth.</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Clothing Section -->
+    <section id="clothing">
+      <h2>Clothing Affordability Index</h2>
+      <div class="chart-section">
+        <form id="clothingForm" method="POST" action="/clothing">
+          <label for="clothing_year">Year:</label>
+          <select id="clothing_year" name="year">
+            {% for y in years %}
+              <option value="{{ y }}">{{ y }}</option>
+            {% endfor %}
+          </select>
+          
+          <label for="clothing_type">Item Type:</label>
+          <select id="clothing_type" name="item_type">
+            <option value="basic">Basic Items</option>
+            <option value="luxury">Luxury Items</option>
+          </select>
+          
+          <button type="submit">Submit</button>
+        </form>
+        
+        <canvas id="clothingChart" height="400"></canvas>
+      </div>
+      
+      <div class="content-container">
+        <div class="content-card">
+          <h3>Clothing Costs</h3>
+          <p>Compare the cost of common clothing items across different countries and regions. See how much of the average monthly income goes toward clothing expenses.</p>
+        </div>
+        <div class="content-card">
+          <h3>Fashion Industry Impact</h3>
+          <p>Understand how local clothing production, imports, and retail markets affect prices and availability in different regions.</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Food Section -->
+    <section id="food">
+      <h2>Food Price Analysis</h2>
+      <div class="chart-section">
+        <form id="foodForm" method="POST" action="/food">
+          <label for="food_year">Year:</label>
+          <select id="food_year" name="year">
+            {% for y in years %}
+              <option value="{{ y }}">{{ y }}</option>
+            {% endfor %}
+          </select>
+          
+          <label for="food_category">Food Category:</label>
+          <select id="food_category" name="category">
+            <option value="staples">Staple Foods</option>
+            <option value="proteins">Proteins</option>
+            <option value="produce">Fruits & Vegetables</option>
+          </select>
+          
+          <button type="submit">Submit</button>
+        </form>
+        
+        <canvas id="foodChart" height="400"></canvas>
+      </div>
+      
+      <div class="content-container">
+        <div class="content-card">
+          <h3>Grocery Expenses</h3>
+          <p>Compare the cost of essential food items across different countries. See how food prices have changed over time relative to income growth.</p>
+        </div>
+        <div class="content-card">
+          <h3>Dietary Affordability</h3>
+          <p>Analyze how much of a typical household budget is allocated to food in different countries, and how this affects nutritional outcomes.</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Housing Section -->
+    <section id="housing">
+      <h2>Housing Market Trends</h2>
+      <div class="chart-section">
+        <form id="housingForm" method="POST" action="/housing">
+          <label for="housing_year">Year:</label>
+          <select id="housing_year" name="year">
+            {% for y in years %}
+              <option value="{{ y }}">{{ y }}</option>
+            {% endfor %}
+          </select>
+          
+          <label for="housing_type">Housing Type:</label>
+          <select id="housing_type" name="type">
+            <option value="urban">Urban</option>
+            <option value="suburban">Suburban</option>
+            <option value="rural">Rural</option>
+          </select>
+          
+          <button type="submit">Submit</button>
+        </form>
+        
+        <canvas id="housingChart" height="400"></canvas>
+      </div>
+      
+      <div class="content-container">
+        <div class="content-card">
+          <h3>Property Values</h3>
+          <p>Explore housing prices across different cities and countries. Compare property values relative to local incomes and track affordability trends.</p>
+        </div>
+        <div class="content-card">
+          <h3>Rental Markets</h3>
+          <p>Analyze rent-to-income ratios across different markets and understand the challenges of housing affordability in major urban centers.</p>
+        </div>
+      </div>
+    </section>
+    
     <footer>
-      <p>Need help or want to collaborate? <a href="contact.html">Contact Us</a></p>
+      <p>Need help or want to collaborate? <a href="#contact" onclick="showSection('contact')">Contact Us</a></p>
     </footer>
+    
+    <!-- Contact Section -->
+    <section id="contact">
+      <h2>Contact Us</h2>
+      <div class="content-container">
+        <div class="content-card">
+          <h3>Get in Touch</h3>
+          <p>Have questions or suggestions? We'd love to hear from you. Fill out the form below or reach out via email.</p>
+          <form id="contactForm">
+            <div class="form-group">
+              <label for="name">Name:</label>
+              <input type="text" id="name" name="name">
+            </div>
+            <div class="form-group">
+              <label for="email">Email:</label>
+              <input type="email" id="email" name="email">
+            </div>
+            <div class="form-group">
+              <label for="message">Message:</label>
+              <textarea id="message" name="message" rows="5"></textarea>
+            </div>
+            <button type="submit">Send Message</button>
+          </form>
+        </div>
+        <div class="content-card">
+          <h3>Collaboration Opportunities</h3>
+          <p>Interested in contributing data or collaborating on research? We're always looking for partners who share our passion for economic transparency and analysis.</p>
+          <p class="contact-info"><strong>Email:</strong> info@realgrowth.org</p>
+          <p class="contact-info"><strong>Phone:</strong> +1 (555) 123-4567</p>
+        </div>
+      </div>
+    </section>
   </div>
+  
+  <script src="/static/script.js"></script>
 </body>
 </html>
