@@ -4,6 +4,7 @@ import json
 
 app = Flask(__name__)
 df = pd.read_csv('GDP_per_capita.csv', on_bad_lines='skip')
+inflation_df = pd.read_csv('Inflation_Rate.csv', on_bad_lines='skip')
 df['Population'] = pd.to_numeric(df['Population'], errors='coerce')
 year_columns = [col for col in df.columns if col.isdigit()]
 for col in year_columns: df[col] = pd.to_numeric(df[col], errors='coerce')
@@ -36,5 +37,4 @@ def api_gdp():
     top10 = filtered.sort_values(by='gdp_per_capita', ascending=False).head(10)
     result = [{"country": row['Country Name'], "gdp_per_capita": round(row['gdp_per_capita'], 2)} for _, row in top10.iterrows()]
     return jsonify(result)
-
 if __name__ == '__main__': app.run(debug=True)
