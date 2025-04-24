@@ -36,8 +36,4 @@ def api_gdp():
     top10 = filtered.sort_values(by='gdp_per_capita', ascending=False).head(10)
     result = [{"country": row['Country Name'], "gdp_per_capita": round(row['gdp_per_capita'], 2)} for _, row in top10.iterrows()]
     return jsonify(result)
-
-
-
-
 if __name__ == '__main__': app.run(debug=True)
