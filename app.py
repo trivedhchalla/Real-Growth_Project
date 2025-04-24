@@ -3,7 +3,7 @@ import pandas as pd
 import json
 
 app = Flask(__name__)
-df = pd.read_csv('final_merged.csv', on_bad_lines='skip')
+df = pd.read_csv('GDP_per_capita.csv', on_bad_lines='skip')
 df['Population'] = pd.to_numeric(df['Population'], errors='coerce')
 year_columns = [col for col in df.columns if col.isdigit()]
 for col in year_columns: df[col] = pd.to_numeric(df[col], errors='coerce')
